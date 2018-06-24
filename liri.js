@@ -37,6 +37,48 @@ songInfo = () => {
         console.log('Album ' + data.tracks.items[0].album.name)
     });
 }
+var getMovie = function() {
+    let movieName = "";
+    for (let i = 3; i < process.argv.length; i++){
+        if(i>2 && i<process.argv.length){
+            movieName = movieName + " " + process.argv[i];
+        } else {
+            movieName += process.argv[i]
+        }
+    }
+  
+    var urlHit = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=full&tomatoes=true&apikey=trilogy";
+  
+    request(urlHit, function(error, response, body) {
+      if (!error && response.statusCode === 200) {
+        var jsonData = JSON.parse(body);
+  
+        console.log("Title: " + jsonData.Title);
+        console.log("Year: " + jsonData.Year);
+        console.log("Rated: " + jsonData.Rated);
+        console.log("IMDB Rating: " + jsonData.imdbRating);
+        console.log("Country: " + jsonData.Country);
+        console.log("Language: " + jsonData.Language);
+        console.log("Plot: " + jsonData.Plot);
+        console.log("Actors: " + jsonData.Actors);
+      }
+    });
+  };
+var doWhatItSays = function() {
+fs.readFile("random.txt", "utf8", function(error, data) {
+    console.log(data);
+
+    var dataArr = data.split(",");
+
+    if (dataArr.length === 2) {
+    pick(dataArr[0], dataArr[1]);
+    }
+    else if (dataArr.length === 1) {
+    pick(dataArr[0]);
+    }
+});
+};
+  
 switch (action){
     case "my-tweets":
     myTweets();
@@ -47,11 +89,11 @@ switch (action){
     break;
 
     case 'movie-this':
-    withdraw();
+    getMovie();
     break;
 
-    case 'do what it says':
-    lotto();
+    case 'do-what-it-says':
+    doWhatItSays();
     break;
 }
 
